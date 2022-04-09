@@ -1,6 +1,12 @@
 /* Provide sufficient contrast against white background */
+@import url("http://fonts.googleapis.com/css?family=Oswald:400,300,700");
+
 a {
   color: #0366d6;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 code {
@@ -11,4 +17,8 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+h1 {
+    font-size: 5rem;
 }
