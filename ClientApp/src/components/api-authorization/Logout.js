@@ -105,7 +105,7 @@ export class Logout extends Component {
         }
     }
 
-    async populateAuthenticationState() {
+    async populateAuthenticationState() { 
         const authenticated = await authService.isAuthenticated();
         this.setState({ isReady: true, authenticated });
     }
