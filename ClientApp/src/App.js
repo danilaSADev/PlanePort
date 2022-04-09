@@ -9,18 +9,20 @@ import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizat
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
 
 import './custom.css'
+import Welcome from './components/Welocme';
 
 export default class App extends Component {
   static displayName = App.name;
 
   render () {
     return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <AuthorizeRoute path='/fetch-data' component={FetchData} />
-        <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
-      </Layout>
+      <Welcome></Welcome>
+      // <Layout>
+      //   <Route exact path='/' component={Home} />
+      //   <Route path='/counter' component={Counter} />
+      //   <AuthorizeRoute path='/fetch-data' component={FetchData} />
+      //   <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
+      // </Layout>
     );
   }
 }

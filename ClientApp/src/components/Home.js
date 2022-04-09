@@ -6,9 +6,8 @@ export class Home extends Component {
   render () {
     return (
       <div>
-        <h1>Starting React.JS!</h1>
-        <p>Welcome to your new single-page application, built with: <b>REACT.JS</b></p>
-        <h1><strong>FUCK THE UNIVERSITY!!!</strong></h1>
+        <h1>Welcome to our planes website!</h1>
+        <p> This is single page application written in : <b>REACT.JS</b></p>
       </div>
     );
   }
