@@ -26,16 +26,17 @@ export class NavMenu extends Component {
     render() {
         return (
             <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" >
                     <Container>
                         <NavbarBrand tag={Link} to="/"><img width="50px" src="/assets/images/planeport_logo.jpg" /></NavbarBrand>
                         <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                             <ul className="navbar-nav flex-grow">
-                                <LoginMenu>
-                                </LoginMenu>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/"><BsFillQuestionCircleFill /></NavLink>
+                                    <NavLink tag={Link} className="btn btn-outline-primary" to="/booking">Book a ticket!</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/support"><BsFillQuestionCircleFill /></NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>

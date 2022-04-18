@@ -1,29 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using System.Configuration;
 using PlanePort.Data;
 using PlanePort.Models;
+using PlanePort.Data.Repositories;
+using PlanePort.Data.Abstract;
+using PlanePort.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+IConfiguration configuration = builder.Configuration;
+var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+IServiceCollection services = builder.Services;
 
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+services.AddControllersWithViews();
+services.AddDbContext<PlanePortContext>(options => 
+    options.UseSqlServer(
+        connectionString,
+        o => o.MigrationsAssembly("PlanePort"))
+    );
 
-builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer( options => 
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWTSecretKey"))
+                )
+            };
+        }
+    );
+
+services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddSingleton<IAuthService>(
+            new AuthService(
+                configuration.GetValue<string>("JWTSecretKey"),
+                configuration.GetValue<int>("JWTLifespan")
+            )
+        );
+
+
+services.AddMvc();
 
 var app = builder.Build();
 
@@ -38,19 +82,14 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseIdentityServer();
+app.UseHttpsRedirection();
+// app.UseIdentityServer();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-app.MapRazorPages();
-
-app.MapFallbackToFile("index.html");;
+app.MapFallbackToFile("index.html");
 
 app.Run();
