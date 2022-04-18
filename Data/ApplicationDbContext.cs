@@ -8,9 +8,10 @@ namespace PlanePort.Data;
 
 public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
 {
+    public DbSet<Ticket> Tickets { get; }
+
     public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
         : base(options, operationalStoreOptions)
-    {
+    {   }
 
-    }
 }
